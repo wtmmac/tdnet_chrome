@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "適時開示速報",
+  "version": "0.1",
+  "description": "適時開示情報をデスクトップに通知する",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [
+    "https://www.release.tdnet.info/",
+    "notifications"
+  ]
+}
