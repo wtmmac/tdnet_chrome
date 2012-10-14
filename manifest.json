@@ -6,8 +6,20 @@
   "background": {
     "scripts": ["background.js"]
   },
+  "options_page": "options.html",
   "permissions": [
     "https://www.release.tdnet.info/",
     "notifications"
-  ]
+  ],
+  "web_accessible_resources": [
+    "notification.html",
+    "notification.js",
+    "lib/jquery-1.8.2.min.js",
+    "options.js"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
 }

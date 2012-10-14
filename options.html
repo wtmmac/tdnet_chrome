@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="options.js"></script>
+<style>
+body {
+    background-color: #F7F7F7;
+    color: #333;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+}
+.header {
+    width:700px; 
+    color: #FFFFFF;
+    margin-left:auto; 
+    margin-right:auto;
+    font-size: 30px;
+    -webkit-border-radius: 7px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    padding: 7px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#959595), to(#000000));
+    text-shadow: 0px -1px 1px rgba(0, 0, 0, 0.25);
+    position: relative;
+}
+.footer {
+    width:700px; 
+    color: #000000;
+    margin-left:auto; 
+    margin-right:auto;
+    padding: 7px;
+    /*    text-shadow: 0px -1px 1px rgba(0, 0, 0, 0.25);*/
+    position: relative;
+}
+.footer a {
+    color: #0044CC;
+}
+
+fieldset {
+  border: 1px solid #bcf;
+  margin-bottom: 10px;
+}
+fieldset legend {
+  font-weight: bold;
+}
+
+fieldset legend label {
+    float: none;
+    width: 0px;
+}
+
+.contents {
+    padding-top: 3px;
+    padding-left: 10px;
+    margin-right: 10px;
+}
+
+label{
+    float: left;
+    width: 180px;
+}
+
+.title {
+    color: #999;
+    font-size: 15px;
+    font-weight: bold;
+}
+.menu {
+    width:700px;
+    background: #FFFFFF;
+    margin-left:auto;
+    margin-right:auto;
+    -webkit-border-radius: 7px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    padding: 7px;
+    text-align: left;
+}
+
+.color_set {
+    position: relative;
+    width: 23px;
+    height: 23px;
+    border: 1px solid #bcf;
+    -webkit-border-radius: 7px;
+}
+
+.buttons {
+}
+#save_result {
+    display: none;
+    color: #33e;
+}
+</style>
+</head>
+<body>
+<center>
+<div class="header">適時開示速報</div>
+<br>
+<form name="options">
+    <div class='menu'>
+        <div class='contents'>
+            <label>表示切替時間:</label>
+            <select name='cancel_interval'>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+            </select> 秒
+            <br>
+            <label>起動前の開示を通知する:</label>
+            <input type='checkbox' id='prev_notice' name='prev_notice'>
+        </div>
+    </div>
+    <br>
+    <br>
+    
+    <input type='button' class='buttons' id='save_btn' name='save_btn' value='保存'>
+    <input type='button' class='buttons' id='reset_btn' name='reset_btn' value='リセット'>
+    <input type='button' class='buttons' id='exit_btn' name='exit_btn' value='閉じる'>
+</form>
+<div id='save_result'>Your configuration has been successfully saved.</div>
+<div class="footer"><a href='#' target=_blank>repos</a> | <a href='#' target=_blank>history</a> | <a href='http://www.ninxit.com/blog/' target=_blank>HP</a></div>
+</center>
+</body>
+</html>
