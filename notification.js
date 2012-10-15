@@ -1,6 +1,6 @@
 $(function(){
-    var BG = chrome.extension.getBackgroundPage();
-    var node = BG.notify.shift();
+    var Communicate = chrome.extension.getBackgroundPage().Communicate;
+    var node = Communicate.shift();
     
     $("#time").text(node.time);
     $("#title").text(node.title);

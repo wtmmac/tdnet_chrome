@@ -1,11 +1,20 @@
-// Back ground
-BG = this;
-BG.notify = [];
+// notification.jsとやり取り
+var Communicate = {
+    notify: [],
+
+    push: function(node){
+        this.notify.push(node);
+    },
+
+    shift: function(){
+        return this.notify.shift();
+    }
+}
 
 // オプション
-Options = {
+var Options = {
     options: {
-        cancel_interval: 5, // 秒
+        cancel_interval: 10, // 秒
         prev_notice: false
     },
 
@@ -37,7 +46,7 @@ Options = {
 }
 
 // デスクトップ通知管理
-TdnetNotify = {
+var TdnetNotify = {
     nodes: [],
     count: 0,
     is_enable: true,
@@ -54,7 +63,7 @@ TdnetNotify = {
         if(this.count < 3 && this.nodes.length > 0){
             var node = this.nodes.pop();
             
-            BG.notify.push(node);
+            Communicate.push(node);
 
             var n = webkitNotifications.createHTMLNotification("notification.html");
             n.show();
@@ -88,7 +97,7 @@ TdnetNotify = {
 }
 
 // 履歴管理
-TdnetHistory = {
+var TdnetHistory = {
     data: {},
 
     save: function(pdf){
@@ -103,13 +112,13 @@ TdnetHistory = {
 // 適時開示取得
 function tdnet_fetch(num)
 {
+    console.log('fetch');
     var d = new Date();
     var year = d.getFullYear();
     var mon = d.getMonth()+1;
     mon = mon < 10 ? "0"+mon : ""+mon;
     var date = d.getDate();
     date = date < 10 ? "0"+date : ""+date;
-    date = '12';
 
     var url = "https://www.release.tdnet.info/inbs/I_list_"+(num < 10 ? "00"+num : "0"+num)+"_"+year+mon+date+".html";
 
@@ -147,10 +156,8 @@ function tdnet_fetch(num)
                     // 全部通知
                     TdnetNotify.notify_all();
                     
-                    // 1分後に最初から開始
-                    setTimeout(function(){
-                        tdnet_fetch(1);
-                    }, 60000);
+                    // 呼び出し設定
+                    set_tdnet_fetch(1);
                     return;
                 }
                 TdnetHistory.save(pdf); // 履歴保存
@@ -178,23 +185,35 @@ function tdnet_fetch(num)
             // 全部通知
             TdnetNotify.notify_all();
             
-            // 1分後に最初から開始
-            setTimeout(function(){
-                tdnet_fetch(1);
-            }, 60000);
+            // 呼び出し設定
+            set_tdnet_fetch(1);
         }
     }
     
     // 取得失敗時
     x.onerror = function(res){
-        // 1分後に最初から開始
-        setTimeout(function(){
-            tdnet_fetch(1);
-        }, 60000);
+        set_tdnet_fetch(1);
     }
     
     x.open( 'GET', url, true );
     x.send(null);
+}
+
+// 取得間隔調整
+function set_tdnet_fetch(num)
+{
+    var d = new Date();
+    var min = d.getMinutes();
+    var sec = d.getSeconds();
+    
+    // 5分間隔+5秒で次の開示を確認しにいく
+    var tmp = min % 10;
+    var diff = tmp < 5 ? 5 - tmp : 10 - tmp;
+    var msec = ((diff*60) - sec) * 1000 + 5000;
+    
+    setTimeout(function(){
+        tdnet_fetch(num);
+    }, msec);
 }
 
 // オプション読み込み
