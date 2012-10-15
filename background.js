@@ -112,7 +112,6 @@ var TdnetHistory = {
 // 適時開示取得
 function tdnet_fetch(num)
 {
-    console.log('fetch');
     var d = new Date();
     var year = d.getFullYear();
     var mon = d.getMonth()+1;
