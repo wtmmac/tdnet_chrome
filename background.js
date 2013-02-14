@@ -15,7 +15,13 @@ var Communicate = {
 var Options = {
     options: {
         cancel_interval: 10, // 秒
-        prev_notice: false
+        prev_notice: false,
+        // ver0.1.1追加
+        notice_start_hour: 0,
+        notice_start_min: 0,
+        notice_end_hour: 23,
+        notice_end_min: 59,
+        notice_get_second: "disable",
     },
 
     load: function(){
@@ -23,6 +29,13 @@ var Options = {
         if(options){
             try{
                 this.options = JSON.parse(options);
+
+                // ver0.1 -> 0.1.1
+                if(!this.options.notice_start_hour){ this.options.notice_start_hour = 0; }
+                if(!this.options.notice_start_min){ this.options.notice_start_min = 0; }
+                if(!this.options.notice_end_hour){ this.options.notice_end_hour = 23; }
+                if(!this.options.notice_end_min){ this.options.notice_end_min = 59; }
+                if(!this.options.notice_get_second){ this.options.notice_get_second = "disable"; }
             }
             catch(e){
             }
@@ -113,14 +126,28 @@ var TdnetHistory = {
 function tdnet_fetch(num)
 {
     var d = new Date();
+
+    // 通知可能時間内かチェック
+    var hour = d.getHours();
+    var min = d.getMinutes();
+    var notice_now_time = hour*60 + min;
+    var notice_start_time = parseInt(Options.get("notice_start_hour"))*60 + parseInt(Options.get("notice_start_min"));
+    var notice_end_time = parseInt(Options.get("notice_end_hour"))*60 + parseInt(Options.get("notice_end_min"));
+    if(notice_now_time < notice_start_time || notice_now_time > notice_end_time){
+        // 時間外
+        set_tdnet_fetch(1);
+        return;
+    }
+
+    // 取得先URL作成
     var year = d.getFullYear();
     var mon = d.getMonth()+1;
     mon = mon < 10 ? "0"+mon : ""+mon;
     var date = d.getDate();
     date = date < 10 ? "0"+date : ""+date;
-
     var url = "https://www.release.tdnet.info/inbs/I_list_"+(num < 10 ? "00"+num : "0"+num)+"_"+year+mon+date+".html";
 
+    // 取得開始
     var x = new XMLHttpRequest();
     // 取得成功時
     x.onload = function(res){
@@ -201,14 +228,18 @@ function tdnet_fetch(num)
 // 取得間隔調整
 function set_tdnet_fetch(num)
 {
-    var d = new Date();
-    var min = d.getMinutes();
-    var sec = d.getSeconds();
-    
-    // 5分間隔+5秒で次の開示を確認しにいく
-    var tmp = min % 10;
-    var diff = tmp < 5 ? 5 - tmp : 10 - tmp;
-    var msec = ((diff*60) - sec) * 1000 + 5000;
+    var nsecond = parseInt(Options.get("notice_get_second"));
+    var msec = 300000; // デフォルト5分後
+    if(nsecond >= 0 && nsecond <= 5 ){
+        // 5分区切り+n秒で次の開示を確認しにいく
+        var d = new Date();
+        var min = d.getMinutes();
+        var sec = d.getSeconds();
+
+        var tmp = min % 10;
+        var diff = tmp < 5 ? 5 - tmp : 10 - tmp;
+        msec = ((diff*60) - sec) * 1000 + nsecond*1000;
+    }
     
     setTimeout(function(){
         tdnet_fetch(num);

@@ -122,6 +122,20 @@ label{
             <br>
             <label>起動前の開示を通知する:</label>
             <input type='checkbox' id='prev_notice' name='prev_notice'>
+            <br>
+            <label>通知を有効にする時間帯：</label>
+            <select name='notice_start_hour'></select>:<select name='notice_start_min'></select> - <select name='notice_end_hour'></select>:<select name='notice_end_min'></select>
+            <br>
+            <label>開示を取得するタイミング：</label>
+            <select name='notice_get_second'>
+                <option>disable</option>
+                <option>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select> 秒後
         </div>
     </div>
     <br>
