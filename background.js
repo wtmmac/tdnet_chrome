@@ -71,6 +71,11 @@ var TdnetNotify = {
     },
 
     notify: function(){
+        // 通知可能時間内かチェック
+        if(!this.ontime()){
+            return;
+        }
+
         // 通知できる状態にあるか
         // デスクトップ通知は最大5件？程度までっぽい
         if(this.count < 3 && this.nodes.length > 0){
@@ -94,10 +99,27 @@ var TdnetNotify = {
     },
 
     notify_all: function(){
-        var i;
-        for(i = this.count; i < 3; i++){
+        // 通知可能時間内かチェック
+        if(!this.ontime()){
+            return;
+        }
+        for(var i = this.count; i < 3; i++){
             this.notify();
         }
+    },
+
+    ontime: function(){
+        var d = new Date();
+        var hour = d.getHours();
+        var min = d.getMinutes();
+        var notice_now_time = hour*60 + min;
+        var notice_start_time = parseInt(Options.get("notice_start_hour"))*60 + parseInt(Options.get("notice_start_min"));
+        var notice_end_time = parseInt(Options.get("notice_end_hour"))*60 + parseInt(Options.get("notice_end_min"));
+        if(notice_now_time < notice_start_time || notice_now_time > notice_end_time){
+            // 時間外
+            return false;
+        }
+        return true;
     },
 
     enable: function(){
@@ -125,21 +147,8 @@ var TdnetHistory = {
 // 適時開示取得
 function tdnet_fetch(num)
 {
-    var d = new Date();
-
-    // 通知可能時間内かチェック
-    var hour = d.getHours();
-    var min = d.getMinutes();
-    var notice_now_time = hour*60 + min;
-    var notice_start_time = parseInt(Options.get("notice_start_hour"))*60 + parseInt(Options.get("notice_start_min"));
-    var notice_end_time = parseInt(Options.get("notice_end_hour"))*60 + parseInt(Options.get("notice_end_min"));
-    if(notice_now_time < notice_start_time || notice_now_time > notice_end_time){
-        // 時間外
-        set_tdnet_fetch(1);
-        return;
-    }
-
     // 取得先URL作成
+    var d = new Date();
     var year = d.getFullYear();
     var mon = d.getMonth()+1;
     mon = mon < 10 ? "0"+mon : ""+mon;
